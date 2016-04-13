@@ -74,6 +74,17 @@ function master_module_post_type() {
 }
 add_action( 'init', 'master_module_post_type', 0 );
 
+// Set sort order
+function sort_master_module_archive( $query ) {
+    if ( ! is_admin() && $query->is_post_type_archive( 'master_module' ) ) {
+        $query->set( 'order', 'ASC' );
+        $query->set( 'orderby', 'meta_value' );
+        $query->set( 'meta_key', 'course_begin_date' );
+        $query->set( 'meta_type', 'NUMERIC' );
+    }
+}
+add_filter( 'pre_get_posts', 'sort_master_module_archive' );
+
 // Modify the page title
 function filter_master_module_page_title( $title, $id = NULL ) {
     if ( is_post_type_archive( 'master_module' ) ) {
