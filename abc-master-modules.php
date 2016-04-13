@@ -118,18 +118,28 @@ add_filter( 'single_template', 'get_master_module_single_template' );
 
 // Add custom entry meta
 function master_module_entry_meta() {
-    // photo
-    $instructor_photo = get_field( 'instructor_photo' );
-    printf( '<span class="author vcard">
-    <figure id="%3$s" class="wp-caption">
-        %1$s
-        <figcaption class="wp-caption-text">%2$s</figcaption>
-    </figure>
-    </span>',
-        wp_get_attachment_image( $instructor_photo['id'] ),
-        'Taught by ' . $instructor_photo['title'],
-        $instructor_photo['id']
-    );
+    if ( is_archive() ) {
+        // photo
+        if ( get_field( 'instructor_photo' ) ) {
+            $instructor_photo = get_field( 'instructor_photo' );
+            printf( '<span class="author vcard">
+                        <figure id="%3$s" class="wp-caption">
+                            %1$s
+                            <figcaption class="wp-caption-text">%2$s</figcaption>
+                        </figure>
+                     </span>',
+                wp_get_attachment_image( $instructor_photo['id'] ),
+                $instructor_photo['title'],
+                $instructor_photo['id']
+            );
+        }
+    } else {
+        if ( get_field( 'instructor_name' ) ) {
+            printf( '<span class="author vcard">Taught by %1$s</span>',
+                get_field( 'instructor_name' )
+            );
+        }
+    }
 
     // date
     $begin_date = DateTime::createFromFormat( 'Ymd', get_field( 'course_begin_date' ) );
@@ -147,4 +157,10 @@ function master_module_entry_meta() {
         $begin_date_formatted,
         $end_date_formatted
 	);
+
+    // application
+    if ( ! is_archive() && get_field( 'application' ) ) {
+        $application = get_field( 'application' );
+        echo '<span class="dashicons-before dashicons-media-document"><a href="' . $application['url'] . '">Download an application</a></span>';
+    }
 }
