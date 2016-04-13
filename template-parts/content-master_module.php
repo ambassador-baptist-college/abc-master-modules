@@ -41,7 +41,7 @@
 	</div><!-- .entry-content -->
 
 	<footer class="entry-footer">
-		<?php twentysixteen_entry_meta(); ?>
+		<?php master_module_entry_meta(); ?>
 		<?php
 			edit_post_link(
 				sprintf(
