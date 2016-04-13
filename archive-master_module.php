@@ -32,16 +32,57 @@ get_header(); ?>
 
 			<?php
 			// Start the Loop.
-			while ( have_posts() ) : the_post();
+			while ( have_posts() ) : the_post(); ?>
 
-				/*
-				 * Include the Post-Format-specific template for the content.
-				 * If you want to override this in a child theme, then include a file
-				 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
-				 */
-				get_template_part( 'template-parts/content', get_post_format() );
+                <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+                    <header class="entry-header">
+                        <?php if ( is_sticky() && is_home() && ! is_paged() ) : ?>
+                            <span class="sticky-post"><?php _e( 'Featured', 'twentysixteen' ); ?></span>
+                        <?php endif; ?>
 
-			// End the loop.
+                        <?php the_title( sprintf( '<h2 class="entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h2>' ); ?>
+                    </header><!-- .entry-header -->
+
+                    <?php twentysixteen_excerpt(); ?>
+
+                    <?php twentysixteen_post_thumbnail(); ?>
+
+                    <div class="entry-content">
+                        <?php
+                            /* translators: %s: Name of current post */
+                            the_content( sprintf(
+                                __( 'Continue reading<span class="screen-reader-text"> "%s"</span>', 'twentysixteen' ),
+                                get_the_title()
+                            ) );
+
+                            wp_link_pages( array(
+                                'before'      => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'twentysixteen' ) . '</span>',
+                                'after'       => '</div>',
+                                'link_before' => '<span>',
+                                'link_after'  => '</span>',
+                                'pagelink'    => '<span class="screen-reader-text">' . __( 'Page', 'twentysixteen' ) . ' </span>%',
+                                'separator'   => '<span class="screen-reader-text">, </span>',
+                            ) );
+                        ?>
+                    </div><!-- .entry-content -->
+
+                    <footer class="entry-footer">
+                        <?php twentysixteen_entry_meta(); ?>
+                        <?php
+                            edit_post_link(
+                                sprintf(
+                                    /* translators: %s: Name of current post */
+                                    __( 'Edit<span class="screen-reader-text"> "%s"</span>', 'twentysixteen' ),
+                                    get_the_title()
+                                ),
+                                '<span class="edit-link">',
+                                '</span>'
+                            );
+                        ?>
+                    </footer><!-- .entry-footer -->
+                </article><!-- #post-## -->
+
+			<?php // End the loop.
 			endwhile;
 
 			// Previous/next page navigation.
