@@ -94,3 +94,46 @@ function filter_master_module_page_title( $title, $id = NULL ) {
     return $title;
 }
 add_filter( 'custom_title', 'filter_master_module_page_title' );
+
+// Add custom template
+function get_master_module_archive_template( $archive_template ) {
+    global $post;
+    if ( is_post_type_archive ( 'master_module' ) ) {
+        $archive_template = dirname( __FILE__ ) . '/archive-master_module.php';
+    }
+    return $archive_template;
+}
+add_filter( 'archive_template', 'get_master_module_archive_template' ) ;
+
+// Add custom entry meta
+function master_module_entry_meta() {
+    // photo
+    $instructor_photo = get_field( 'instructor_photo' );
+    printf( '<span class="author vcard">
+    <figure id="%3$s" class="wp-caption">
+        %1$s
+        <figcaption class="wp-caption-text">%2$s</figcaption>
+    </figure>
+    </span>',
+        wp_get_attachment_image( $instructor_photo['id'] ),
+        'Taught by ' . $instructor_photo['title'],
+        $instructor_photo['id']
+    );
+
+    // date
+    $begin_date = DateTime::createFromFormat( 'Ymd', get_field( 'course_begin_date' ) );
+    $end_date = DateTime::createFromFormat( 'Ymd', get_field( 'course_end_date' ) );
+    $begin_date_formatted = $begin_date->format( 'F j' );
+    if ( $begin_date->format( 'Y' ) != $end_date->format( 'Y' ) ) {
+        $begin_date_formatted .= $begin_date->format( ', Y' );
+    }
+    $end_date_formatted = $end_date->format( 'j, Y' );
+    if ( $begin_date->format( 'm' ) != $end_date->format( 'm' ) ) {
+        $end_date_formatted = $end_date->format( 'F ' ) . $end_date_formatted;
+    }
+
+    printf( '<span class="posted-on">%1$s&ndash;%2$s</span>',
+        $begin_date_formatted,
+        $end_date_formatted
+	);
+}
