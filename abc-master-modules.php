@@ -95,7 +95,7 @@ function filter_master_module_page_title( $title, $id = NULL ) {
 }
 add_filter( 'custom_title', 'filter_master_module_page_title' );
 
-// Add custom template
+// Add custom archive template
 function get_master_module_archive_template( $archive_template ) {
     global $post;
     if ( is_post_type_archive ( 'master_module' ) ) {
@@ -104,6 +104,17 @@ function get_master_module_archive_template( $archive_template ) {
     return $archive_template;
 }
 add_filter( 'archive_template', 'get_master_module_archive_template' ) ;
+
+// Add custom single template
+function get_master_module_single_template( $single_template ) {
+    global $post;
+
+    if ( 'master_module' == $post->post_type ) {
+        $single_template = dirname( __FILE__ ) . '/single-master_module.php';
+    }
+    return $single_template;
+}
+add_filter( 'single_template', 'get_master_module_single_template' );
 
 // Add custom entry meta
 function master_module_entry_meta() {
