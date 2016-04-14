@@ -142,21 +142,8 @@ function master_module_entry_meta() {
         }
     }
 
-    // date
-    $begin_date = DateTime::createFromFormat( 'Ymd', get_field( 'course_begin_date' ) );
-    $end_date = DateTime::createFromFormat( 'Ymd', get_field( 'course_end_date' ) );
-    $begin_date_formatted = $begin_date->format( 'F j' );
-    if ( $begin_date->format( 'Y' ) != $end_date->format( 'Y' ) ) {
-        $begin_date_formatted .= $begin_date->format( ', Y' );
-    }
-    $end_date_formatted = $end_date->format( 'j, Y' );
-    if ( $begin_date->format( 'm' ) != $end_date->format( 'm' ) ) {
-        $end_date_formatted = $end_date->format( 'F ' ) . $end_date_formatted;
-    }
-
-    printf( '<span class="posted-on">%1$s&ndash;%2$s</span>',
-        $begin_date_formatted,
-        $end_date_formatted
+    printf( '<span class="posted-on">%1$s</span>',
+        get_master_module_date_format( $post )
     );
 
     // application
@@ -241,3 +228,20 @@ function master_module_register_sortable( $columns ) {
     return $columns;
 }
 add_filter( 'manage_edit-master_module_sortable_columns', 'master_module_register_sortable' );
+
+// Helper function to format dates
+function get_master_module_date_format( $post ) {
+    // date
+    $begin_date = DateTime::createFromFormat( 'Ymd', get_field( 'course_begin_date' ) );
+    $end_date = DateTime::createFromFormat( 'Ymd', get_field( 'course_end_date' ) );
+    $begin_date_formatted = $begin_date->format( 'F j' );
+    if ( $begin_date->format( 'Y' ) != $end_date->format( 'Y' ) ) {
+        $begin_date_formatted .= $begin_date->format( ', Y' );
+    }
+    $end_date_formatted = $end_date->format( 'j, Y' );
+    if ( $begin_date->format( 'm' ) != $end_date->format( 'm' ) ) {
+        $end_date_formatted = $end_date->format( 'F ' ) . $end_date_formatted;
+    }
+
+    return $begin_date_formatted . '&ndash;' . $end_date_formatted;
+}

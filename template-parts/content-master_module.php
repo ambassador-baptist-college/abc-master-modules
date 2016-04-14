@@ -24,20 +24,8 @@
     <div class="entry-content">
         <?php
             if ( ! is_archive() ) {
-                $begin_date = DateTime::createFromFormat( 'Ymd', get_field( 'course_begin_date' ) );
-                $end_date = DateTime::createFromFormat( 'Ymd', get_field( 'course_end_date' ) );
-                $begin_date_formatted = $begin_date->format( 'F j' );
-                if ( $begin_date->format( 'Y' ) != $end_date->format( 'Y' ) ) {
-                    $begin_date_formatted .= $begin_date->format( ', Y' );
-                }
-                $end_date_formatted = $end_date->format( 'j, Y' );
-                if ( $begin_date->format( 'm' ) != $end_date->format( 'm' ) ) {
-                    $end_date_formatted = $end_date->format( 'F ' ) . $end_date_formatted;
-                }
-
-                printf( '<h2 id="date">Dates: %1$s&ndash;%2$s</h2>',
-                    $begin_date_formatted,
-                    $end_date_formatted
+                printf( '<h2 id="date">Dates: %1$s</h2>',
+                    get_master_module_date_format( $post )
                 );
 
             }
