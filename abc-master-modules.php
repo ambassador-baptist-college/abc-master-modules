@@ -212,3 +212,32 @@ function master_module_shortcode() {
     return $shortcode_content;
 }
 add_shortcode( 'next_master_module', 'master_module_shortcode' );
+
+// Add dates to WP admin list
+function master_module_column_header( $columns ) {
+        $columns = array(
+            'cb'            => '<input type="checkbox" />',
+            'title'         => 'Title',
+            'dates'         => 'Course Dates',
+            'author'        => 'Author',
+            'date'          => 'Date',
+        );
+    return $columns;
+}
+add_filter( 'manage_edit-master_module_columns', 'master_module_column_header' );
+
+function master_module_column_content( $column ) {
+    global $post;
+
+    if ( 'dates' == $column ) {
+        echo get_master_module_date_format( $post );
+    }
+}
+add_action( 'manage_pages_custom_column', 'master_module_column_content' );
+
+// Enable sorting by course date
+function master_module_register_sortable( $columns ) {
+    $columns['dates'] = 'dates';
+    return $columns;
+}
+add_filter( 'manage_edit-master_module_sortable_columns', 'master_module_register_sortable' );
