@@ -124,13 +124,14 @@ function master_module_entry_meta() {
             $instructor_photo = get_field( 'instructor_photo' );
             printf( '<span class="author vcard">
                         <figure id="%3$s" class="wp-caption">
-                            %1$s
+                            <a href="%4$s">%1$s</a>
                             <figcaption class="wp-caption-text">%2$s</figcaption>
                         </figure>
                      </span>',
-                wp_get_attachment_image( $instructor_photo['id'] ),
+                wp_get_attachment_image( $instructor_photo['id'], array( 150, 300 ) ),
                 $instructor_photo['title'],
-                $instructor_photo['id']
+                $instructor_photo['id'],
+                get_permalink()
             );
         }
     } else {
