@@ -156,7 +156,7 @@ function master_module_entry_meta() {
     printf( '<span class="posted-on">%1$s&ndash;%2$s</span>',
         $begin_date_formatted,
         $end_date_formatted
-	);
+    );
 
     // application
     if ( ! is_archive() && get_field( 'application' ) ) {
@@ -164,3 +164,50 @@ function master_module_entry_meta() {
         echo '<span class="dashicons-before dashicons-media-document"><a href="' . $application['url'] . '">Download an application</a></span>';
     }
 }
+
+// Add shortcode for next module
+function master_module_shortcode() {
+// WP_Query arguments
+    $args = array (
+        'post_type'              => array( 'master_module' ),
+        'post_status'            => array( 'publish' ),
+        'posts_per_page'         => '1',
+        'order'                  => 'ASC',
+        'meta_query'             => array(
+            array(
+                'key'       => 'course_begin_date',
+                'value'     => '20160414',
+                'compare'   => '>=',
+                'type'      => 'NUMERIC',
+            ),
+        ),
+        'cache_results'          => true,
+        'update_post_meta_cache' => true,
+        'update_post_term_cache' => true,
+    );
+
+    // The Query
+    $next_master_module_query = new WP_Query( $args );
+
+    $shortcode_content = '<h1>Next Master Module</h1>
+        <p>See <a href="all/">past modules</a>.</p>';
+
+    // The Loop
+    if ( $next_master_module_query->have_posts() ) {
+        while ( $next_master_module_query->have_posts() ) {
+            $next_master_module_query->the_post();
+            ob_start();
+            require( 'template-parts/content-master_module.php' );
+            $shortcode_content .= ob_get_clean();
+        }
+    } else {
+        $shortcode_content .= '<p>No Master of Ministries Modules are currently scheduled; check back for updates.</p>
+        <p>You can also <a href="all/">browse past modules here</a>.</p>';
+    }
+
+    // Restore original Post Data
+    wp_reset_postdata();
+
+    return $shortcode_content;
+}
+add_shortcode( 'next_master_module', 'master_module_shortcode' );
