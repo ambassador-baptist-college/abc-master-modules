@@ -178,7 +178,7 @@ function master_module_shortcode() {
     $next_master_module_query = new WP_Query( $args );
 
     $shortcode_content = '<h1>Next Master Module</h1>
-        <p>See <a href="all/">past modules</a>.</p>';
+        <p>See <a href="all/">past modules here</a>.</p>';
 
     // The Loop
     if ( $next_master_module_query->have_posts() ) {
